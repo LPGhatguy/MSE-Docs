@@ -1,8 +1,10 @@
 # CPU Planning
-The base CPU architecture has an implementation for 8-bit, 16-bit, and potentially even 32-bit systems. The game's virtual machine implementation is called *Zarkov*.
+The base CPU architecture has an implementation for 8-bit and 16-bit systems. 32-bit systems are in consideration.
+
+The game's virtual machine implementation is called *Zarkov*.
 
 ## Overview
-The base CPU is in the middle of RISC and CISC. Loading into registers is explicit, there is an integrated FPU, and inspiration is drawn from both x86 and ARM.
+The base CPU is intended to be RISC, peppered with a few CISC instructions to minimize compiled size.
 
 All CPUs in the game are little-endian.
 
@@ -23,7 +25,7 @@ General Registers:
 - ` 8-bit`: 8 total: 4x 8-bit (`r4-r7`) (0x8-0xB)
 - `16-bit`: 12 total: 4x 8-bit (`r4-r7`), 4x 16-bit (`r8-r11`) (0xC-0xF)
 
-In 16-bit and 32-bit implementations, `r0{N}` will access octect `N` of a register. This means that `r8{0}` and `r8{1}` are essentially 8-bit registers of their own.
+In 16-bit implementations, `r0{N}` will access octect `N` of a register. This means that `r8{0}` and `r8{1}` are essentially 8-bit registers of their own.
 
 Register references are encoded using a single byte. The first four bits select the register, and the second four bits select the portion of the register to select.
 
@@ -41,12 +43,12 @@ Memory is paged in segments that vary based on the bit depth of the processor:
 Memory is loaded into virtual pages from physical pages using the `page` instruction. The maximum number of physical pages for a given depth `b` is `2^b`, yielding a limit of 256 pages for 8-bit systems and 65536 pages for 16-bit systems.
 
 ## Constants
-Constants are of the form `0x0000`, `255u`, `128`, or `256f`.
+Constants are of the form `0x0000`, `255u`, `128`, or `256f`. Their size is determined statically.
 
 ## Instructions
 - `R#` denotes a register
 - `N#` denotes a constant
-- `(X, X)` denotes possibilties (OR)
+- `(X, X)` denotes possibilities (OR)
 
 All operators store in their first parameter unless otherwise noted.
 
@@ -113,4 +115,3 @@ All operators store in their first parameter unless otherwise noted.
 | `bor R0 R1` | bitwise or `R0` with `R1` |
 | `bxor R0 R1` | bitwise xor `R0` with `R1` |
 | `band R0 R1` | bitwise and `R0` with `R1` |
-
