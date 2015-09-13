@@ -20,6 +20,7 @@ Special Registers:
 	- bit 6: reserved
 	- bit 7: reserved
 - Instruction pointer (`rsi`) (N-bit) (0x1)
+	- points to the next instruction
 - Stack pointer (`rss`) (N-bit) (0x2)
 - Comparison register (`rsc`) (8-bit) (0x3)
 	- `0x0` - unset
@@ -53,7 +54,7 @@ Memory is loaded into virtual pages from physical pages using the `page` instruc
 ## Constants
 Constants are of the form `0x0000`, `255u`, `128`, or `256f`. Their size is determined statically and contextually.
 
-`put r4 255u` always puts an 8-bit, unsigned representation of `255` into `r4`.
+`put r4 255` always puts an 8-bit, signed representation of `255` into `r4`.
 
 `put r0 255u` puts an N-bit, unsigned representation of `255` into `r0`, little-endian.
 
@@ -81,14 +82,14 @@ All operators store in their first parameter unless otherwise noted.
 | `peek R0 N0` | peek a value from the stack, offset by `N0`, into `R0` |
 | `call R0` | call code at pointer `R0` |
 | `ret` | return from function |
-| **Jumps** |
+| **Jumps and Bumps** |
 | `jmp R0` | jump to pointer `R0` |
-| `jet R0` | jump if cmp equal to `R0` |
-| `jne R0` | jump if cmp not equal to `R0` |
-| `jlt R0` | jump if cmp less than `R0` |
-| `jgt R0` | jump if cmp greater than `R0` |
-| `jle R0` | jump if cmp less than or equal to `R0` |
-| `jge R0` | jump if cmp greater than or equal to `R0` |
+| `bet R0` | bump on cmp equal targeting `R0` |
+| `bne R0` | bump on cmp not equal targeting `R0` |
+| `blt R0` | bump on cmp less targeting `R0` |
+| `bgt R0` | bump on cmp greater targeting `R0` |
+| `ble R0` | bump on cmp less than or equal targeting `R0` |
+| `bge R0` | bump on cmp greater than or equal targeting `R0` |
 | **Signed Int** |
 | `iinc R0` | increment `R0` |
 | `idec R0` | decrement `R0` |
@@ -171,4 +172,14 @@ fpow r8 r9
 fdiv r8 r10
 fceil r8
 ftou r4 r8
+```
+
+Jump to address in `r0` on equal
+```
+put r4 1
+put r5 1
+
+cmp r4 r5
+bet
+jmp r0
 ```
