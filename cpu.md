@@ -10,7 +10,7 @@ All CPUs in the game are little-endian.
 
 ## Registers
 Special Registers:
-- Flag register (`rsf`) (8-bit) (0x0)
+- Flag register (`rsf`) (8-bit)
 	- bit 0: reserved
 	- bit 1: reserved
 	- bit 2: reserved
@@ -19,10 +19,10 @@ Special Registers:
 	- bit 5: reserved
 	- bit 6: reserved
 	- bit 7: reserved
-- Instruction pointer (`rsi`) (N-bit) (0x1)
+- Instruction pointer (`rsi`) (N-bit)
 	- points to the next instruction
-- Stack pointer (`rss`) (N-bit) (0x2)
-- Comparison register (`rsc`) (8-bit) (0x3)
+- Stack pointer (`rss`) (N-bit)
+- Comparison register (`rsc`) (8-bit)
 	- `0x0` - unset
 	- `0x1` - equal
 	- `0x2` - not equal
@@ -30,19 +30,21 @@ Special Registers:
 	- `0x4` - greater
 
 General Registers:
-- All bits: 4 total: 4x N-bit (`r0-r3`) (0x4-0x7)
-- 8-bit: 8 total: 4x 8-bit (`r4-r7`) (0x8-0xB)
-- 16-bit: 12 total: 4x 8-bit (`r4-r7`), 4x 16-bit (`r8-r11`) (0xC-0xF)
+- `r0-r3`: N-bit
+- `r4-r7`: 8-bit
+- `r8-r11`: 16-bit, 16-bit systems only
 
-In 16-bit implementations, `r0{N}` will access octect `N` of a register. This means that `r8{0}` and `r8{1}` are essentially 8-bit registers of their own.
+Register references are encoded using a single byte. The first 6 bits reference the byte offset of the register (architecture dependent) while the last 2 bits define the length of the register to sample (1-4 bytes).
 
-Register references are encoded using a single byte. The first four bits select the register, and the second four bits select the portion of the register to select.
+At this time, accessing more than 1 byte in an 8-bit system or 2 bytes in a 16-bit system is invalid.
 
-A second four bits of `0x0` selects the entire register, `0x1` selects the first octect, and `0x2` selects the second octet.
+To access an entire register, use `rN`. The resulting size will be based on the size of the register. To access a smaller sequence of the register, of size `L` bytes, use `rN:L`.
 
-`r0` would be encoded as `0x40`
+Out-of-bounds access in a register is presently undefined.
 
-`r3{1}` would be encoded as `0x72`
+To access a section of register `N`, offset by `M` bytes, of byte length `L`, use `rN+M:L`.
+
+This means that the low byte (first) of `r8` can be accessed using `r8:1`, and the high byte can be accessed using `r8+1:1`.
 
 ## Memory
 Memory is paged in segments that vary based on the bit depth of the processor:
