@@ -93,12 +93,12 @@ All operators store results in their first parameter unless otherwise noted.
 | `ret` | return from function |
 | **Jumps and Bumps** |
 | `jmp R0` | jump to pointer `R0` |
-| `bet R0` | bump on cmp equal targeting `R0` |
-| `bne R0` | bump on cmp not equal targeting `R0` |
-| `blt R0` | bump on cmp less targeting `R0` |
-| `bgt R0` | bump on cmp greater targeting `R0` |
-| `ble R0` | bump on cmp less than or equal targeting `R0` |
-| `bge R0` | bump on cmp greater than or equal targeting `R0` |
+| `bet` | bump on cmp equal |
+| `bne` | bump on cmp not equal |
+| `blt` | bump on cmp less |
+| `bgt` | bump on cmp greater |
+| `ble` | bump on cmp less than or equal |
+| `bge` | bump on cmp greater than or equal |
 | `bsup R0` | bump if feature in `R0` is supported |
 | **Signed Int** |
 | `iinc R0` | increment `R0` |
